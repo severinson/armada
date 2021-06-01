@@ -3,6 +3,7 @@ package authorization
 import (
 	"context"
 	"encoding/base64"
+	"strings"
 
 	grpc_auth "github.com/grpc-ecosystem/go-grpc-middleware/auth"
 	"github.com/jcmturner/gokrb5/v8/credentials"
@@ -122,6 +123,8 @@ func (authService *KerberosAuthService) Authenticate(ctx context.Context) (Princ
 			if err != nil {
 				return nil, err
 			}
+
+			log.Infof("User: %s groups: %s", user, strings.Join(userGroups, ", "))
 
 			// Original library sets ticket accepted header here, but this breaks python
 			// request-negotiate-sspi module
